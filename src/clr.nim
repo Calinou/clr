@@ -53,28 +53,53 @@ type Color = tuple
   lightness: float
   value: float
 
-proc parseColor(color: string): seq[float] =
+proc parseColor(color: string): Color =
   ## Parses a string such as `rgb(255, 0, 0)` or `#ff0000` to a Color struct.
-  let hexShortRegex = re"#([0-9A-f])([0-9A-f])([0-9A-f])"
-  let hexLongRegex = re"#([0-9A-f]{2})([0-9A-f]{2})([0-9A-f]{2})"
+  let hexShortRegex = re"#?([0-9A-f])([0-9A-f])([0-9A-f])"
+  let hexLongRegex = re"#?([0-9A-f]{2})([0-9A-f]{2})([0-9A-f]{2})"
   let rgbRegex = re"rgb\((\d+),\s?(\d+),\s?(\d+)\)"
   let hslRegex = re"hsl\((\d+),\s?(\d+)%?,\s?(\d+)%?\)"
   let hsvRegex = re"hsv\((\d+),\s?(\d+)%?,\s?(\d+)%?\)"
 
-  var hexShortMatches: seq[string] = @[]
+  var hexShortMatches: array[3, string]
 
   if match(color, hexShortRegex, hexShortMatches):
-    for index, match in hexShortMatches.pairs:
+    let red = parseHexInt(hexShortMatches[0]).float/15.0
+    let green = parseHexInt(hexShortMatches[1]).float/15.0
+    let blue = parseHexInt(hexShortMatches[2]).float/15.0
+
+    let hls = rgbToHls(@[red, green, blue])
+    let hsv = rgbToHsv(@[red, green, blue])
+
+    # colorsys can return a negative hue with some colors for some reason,
+    # so if it is negative, we need to "invert" it back
+    let hue =
+      if hls[0] >= 0:
+        hls[0]
+      else:
+        hls[0] + 1
+
+    let saturation = hls[2]
+    let lightness = hls[1]
+    let value = hsv[2]
+
+    return (
+      red: red,
+      green: green,
+      blue: blue,
+      hue: hue,
+      saturation: saturation,
+      lightness: lightness,
+      value: value,
+    )
 
   else:
     echo "Could not parse color."
-
-  return colors
 
 let args = docopt(doc, version = "0.1.0")
 
 if args["info"]:
   setForegroundColor(fgRed, false)
-  parseColor($args["<color>"])
+  echo parseColor($args["<color>"])
 
 system.addQuitProc(resetAttributes)
