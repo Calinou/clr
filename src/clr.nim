@@ -39,81 +39,45 @@ Options:
 """
 
 import docopt
-import colorsys
+import chroma
 import re
 import strutils
 import terminal
 
-type Color = tuple
-  red: float
-  green: float
-  blue: float
-  hue: float
-  saturation: float
-  lightness: float
-  value: float
-
 proc parseColor(color: string): Color =
-  ## Parses a string such as `rgb(255, 0, 0)` or `#ff0000` to a Color struct.
-  let hexLongRegex = re"#?([0-9A-f]{2})([0-9A-f]{2})([0-9A-f]{2})"
-  let hexShortRegex = re"#?([0-9A-f])([0-9A-f])([0-9A-f])"
-  let rgbRegex = re"rgb\((\d+),\s?(\d+),\s?(\d+)\)"
-  let hslRegex = re"hsl\((\d+),\s?(\d+)%?,\s?(\d+)%?\)"
-  let hsvRegex = re"hsv\((\d+),\s?(\d+)%?,\s?(\d+)%?\)"
+  ## Parses a string such as `#FF0000` or `hsl(0, 100%, 50%)` to a color object.
+  try:
+    # Parse using chroma first
+    return parseHtmlColor(color)
 
-  # There are always 3 values to capture in each regular expression
-  var matches: array[3, string]
+  except InvalidColor:
+    # chroma doesn't parse HTML HSL/HSV color notations,
+    # so we have to do it ourselves
+    let hslRegex = re"hsl\((\d+),\s?(\d+)%?,\s?(\d+)%?\)"
+    let hsvRegex = re"hsv\((\d+),\s?(\d+)%?,\s?(\d+)%?\)"
+    # There are always 3 values to capture in each regular expression
+    var matches: array[3, string]
 
-  # Test all regular expressions and return an error if none can be matched
-  var regex: Regex
-  if match(color, hexLongRegex, matches):
-    regex = hexLongRegex
-  elif match(color, hexShortRegex, matches):
-    regex = hexShortRegex
-  elif match(color, rgbRegex, matches):
-    regex = rgbRegex
-  elif match(color, hslRegex, matches):
-    regex = hslRegex
-  elif match(color, hsvRegex, matches):
-    regex = hsvRegex
-  else:
-    echo "Could not parse color."
-
-  if regex == hexLongRegex or regex == hexShortRegex:
-      # Multiply short color codes by 15
-      # For example, "#9bf" is equivalent to "#99bbff"
-      let divisor =
-        if regex == hexShortRegex: 15.0
-        else: 255.0
-
-      let red = parseHexInt(matches[0]).float/divisor
-      let green = parseHexInt(matches[1]).float/divisor
-      let blue = parseHexInt(matches[2]).float/divisor
-
-      let hls = rgbToHls(@[red, green, blue])
-      let hsv = rgbToHsv(@[red, green, blue])
-
-      # colorsys can return a negative hue with some colors for some reason,
-      # so if it is negative, we need to "invert" it back
-      let hue =
-        if hls[0] >= 0:
-          hls[0]
-        else:
-          hls[0] + 1
-
-      let saturation = hls[2]
-      let lightness = hls[1]
-      let value = hsv[2]
-
-      return (
-        red: red,
-        green: green,
-        blue: blue,
-        hue: hue,
-        saturation: saturation,
-        lightness: lightness,
-        value: value,
+    if match(color, hslRegex, matches):
+      let colorHSL = ColorHSL(
+        h: parseFloat(matches[0]),
+        s: parseFloat(matches[1]),
+        l: parseFloat(matches[2]),
       )
+
+      return color(colorHSL)
+
+    elif match(color, hsvRegex, matches):
+      let colorHSV = ColorHSV(
+        h: parseFloat(matches[0]),
+        s: parseFloat(matches[1]),
+        v: parseFloat(matches[2]),
+      )
+
+      return color(colorHSV)
+
+  except:
+    echo "Could not parse color."
 
 let args = docopt(doc, version = "0.1.0")
 
@@ -121,4 +85,5 @@ if args["info"]:
   setForegroundColor(fgRed, false)
   echo parseColor($args["<color>"])
 
+# Always reset color codes when exiting
 system.addQuitProc(resetAttributes)
