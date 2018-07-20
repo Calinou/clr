@@ -9,6 +9,6 @@ bin           = @["clr"]
 
 # Dependencies
 
-requires "nim >= 0.18.1"
+requires "nim >= 0.18.0"
 requires "chroma >= 0.0.1"
 requires "docopt >= 0.6.5"

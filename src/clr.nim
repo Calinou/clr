@@ -40,11 +40,13 @@ Options:
 
 import docopt
 import chroma
+import colors
 import re
+import strformat
 import strutils
 import terminal
 
-proc parseColor(color: string): Color =
+proc parseColor(color: string): chroma.Color =
   ## Parses a string such as `#FF0000` or `hsl(0, 100%, 50%)` to a color object.
   try:
     # Parse using chroma first
@@ -81,9 +83,37 @@ proc parseColor(color: string): Color =
 
 let args = docopt(doc, version = "0.1.0")
 
+# The COLORTERM environment variable must be set to "truecolor" or "24bit"
+# for true color terminal output to work
+enableTrueColors()
+
 if args["info"]:
-  setForegroundColor(fgRed, false)
-  echo parseColor($args["<color>"])
+  let color = parseColor($args["<color>"])
+
+  # Create a color from the built-in colors module for the terminal
+  let colorTerm = colors.rgb(
+    int(color.r*255),
+    int(color.g*255),
+    int(color.b*255),
+  )
+
+  # Display output
+
+  echo ""
+
+  let notations = ["hex", "rgb", "hsl", "hsv"]
+
+  for notation in notations:
+    styledEcho(styleBright, fgWhite, &"  {toUpperAscii(notation)}   ")
+
+  echo ""
+
+  setBackgroundColor(colorTerm)
+
+  for _ in 0..1:
+    echo "    "
+
+  echo ""
 
 # Always reset color codes when exiting
 system.addQuitProc(resetAttributes)
