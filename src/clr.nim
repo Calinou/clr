@@ -44,6 +44,7 @@ import colors
 import re
 import strformat
 import strutils
+import tables
 import terminal
 
 proc parseColor(color: string): chroma.Color =
@@ -97,14 +98,24 @@ if args["info"]:
     int(color.b*255),
   )
 
+  # Convert to HSL and HSV for displaying
+  let colorHsl = hsl(color)
+  let colorHsv = hsv(color)
+
+  let colorStr = {
+    "hex": toHtmlHex(color),
+    "rgb": toHtmlRgb(color),
+    "hsl": &"hsl({int(colorHsl.h)}, {int(colorHsl.s)}%, {int(colorHsl.l)}%)",
+    "hsv": &"hsv({int(colorHsv.h)}, {int(colorHsv.s)}%, {int(colorHsv.v)}%)",
+  }
+
   # Display output
 
   echo ""
 
-  let notations = ["hex", "rgb", "hsl", "hsv"]
-
-  for notation in notations:
-    styledEcho(styleBright, fgWhite, &"  {toUpperAscii(notation)}   ")
+  for str in pairs(colorStr):
+    let notation = toUpperAscii(str.val[0])
+    styledEcho(styleBright, fgWhite, &"  {notation}   ", resetStyle, str.val[1])
 
   echo ""
 
