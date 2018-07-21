@@ -27,9 +27,11 @@ Get information about colors and convert them in the command line.
 Usage:
   clr info <color>
   clr invert <color>
-  clr light <color> <lightness>
-  clr saturate <color> <saturation>
-  clr rotate <color> <degrees>
+  clr lighten <color> <amount>
+  clr darken <color> <amount>
+  clr saturate <color> <amount>
+  clr desaturate <color> <amount>
+  clr spin <color> <degrees>
   clr (-h | --help)
   clr (-V | --version)
 
@@ -82,14 +84,8 @@ proc parseColor(color: string): chroma.Color =
   except:
     echo "Could not parse color."
 
-let args = docopt(doc, version = "0.1.0")
-
-# The COLORTERM environment variable must be set to "truecolor" or "24bit"
-# for true color terminal output to work
-enableTrueColors()
-
-if args["info"]:
-  let color = parseColor($args["<color>"])
+proc displayColor(color: chroma.Color) =
+  ## Displays a color and some information in the terminal.
 
   # Create a color from the built-in colors module for the terminal
   let colorTerm = colors.rgb(
@@ -103,7 +99,7 @@ if args["info"]:
   let colorHsv = hsv(color)
 
   let colorStr = {
-    "hex": toHtmlHex(color),
+    "hex": toLowerAscii(toHtmlHex(color)),
     "rgb": toHtmlRgb(color),
     "hsl": &"hsl({int(colorHsl.h)}, {int(colorHsl.s)}%, {int(colorHsl.l)}%)",
     "hsv": &"hsv({int(colorHsv.h)}, {int(colorHsv.s)}%, {int(colorHsv.v)}%)",
@@ -146,6 +142,55 @@ if args["info"]:
     echo ""
 
   echo ""
+
+let args = docopt(doc, version = "0.1.0")
+# The COLORTERM environment variable must be set to "truecolor" or "24bit"
+# for true color terminal output to work
+enableTrueColors()
+
+# Handle all commands that display a color
+if
+  args["info"] or
+  args["invert"] or
+  args["lighten"] or
+  args["darken"] or
+  args["saturate"] or
+  args["desaturate"] or
+  args["spin"]:
+
+  let color = parseColor($args["<color>"])
+
+  if args["info"]:
+    displayColor(color)
+
+  if args["invert"]:
+    displayColor(
+      chroma.color(
+        1.0 - color.r,
+        1.0 - color.g,
+        1.0 - color.b,
+      )
+    )
+
+  if args["lighten"]:
+    let lighten = parseFloat($args["<amount>"])
+    displayColor(lighten(color, lighten))
+
+  if args["darken"]:
+    let darken = parseFloat($args["<amount>"])
+    displayColor(darken(color, darken))
+
+  if args["saturate"]:
+    let saturation = parseFloat($args["<amount>"])
+    displayColor(saturate(color, saturation))
+
+  if args["desaturate"]:
+    let desaturation = parseFloat($args["<amount>"])
+    displayColor(desaturate(color, desaturation))
+
+  if args["spin"]:
+    let spin = parseFloat($args["<degrees>"])
+    displayColor(spin(color, spin))
 
 # Always reset color codes when exiting
 system.addQuitProc(resetAttributes)
