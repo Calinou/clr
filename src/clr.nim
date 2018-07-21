@@ -108,10 +108,31 @@ if args["info"]:
 
   echo ""
 
-  setBackgroundColor(colorTerm)
+  let squareSize = 4
 
-  for _ in 0..1:
-    echo "    "
+  # Draw preview rectangles, surrounded by 1 row of margin
+  for row in 0..squareSize:
+    stdout.write " ".repeat(3)
+
+    if row != 0 and row != squareSize:
+      setBackgroundColor(colorTerm)
+
+    stdout.write " ".repeat(int(float(squareSize)*1.9))
+
+    resetAttributes()
+    stdout.write " ".repeat(3)
+    setBackgroundColor(bgWhite)
+    stdout.write " ".repeat(3)
+
+    if row != 0 and row != squareSize:
+      setBackgroundColor(colorTerm)
+
+    stdout.write " ".repeat(int(float(squareSize)*1.9))
+
+    setBackgroundColor(bgWhite)
+    stdout.write " ".repeat(3)
+    resetAttributes()
+    echo ""
 
   echo ""
 
