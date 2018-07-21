@@ -38,6 +38,17 @@ Usage:
 Options:
   -h --help        Show this screen.
   -V --version     Show version.
+
+Notes:
+  <color> accepts the following color formats:
+    - #RGB
+    - #RRGGBB
+    - rgb(R, G, B)
+    - hsl(H, S%, L%)
+    - hsv(H, S%, L%)
+
+  <amount> must be a value between 0 and 1.
+  The value will affect the color in an absolute manner.
 """
 
 import docopt
