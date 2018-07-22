@@ -59,6 +59,16 @@ Notes:
   The value will affect the color in an absolute manner.
 ```
 
+### Colored output
+
+For colors to look correct, you need to set the environment variable
+`COLORTERM` to `truecolor`. You can make this permanent by adding the following
+line to your shell startup file (such as `~/.bashrc` or `~/.zshrc`):
+
+```bash
+export COLORTERM="truecolor"
+```
+
 ## License
 
 Copyright © 2018 Hugo Locurcio and contributors
