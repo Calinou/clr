@@ -2,11 +2,11 @@ stages:
   - build
   - deploy
 
-build:linux:
+build:
   stage: build
   image: fedora:28
   before_script:
-    - dnf install gcc git xz -y
+    - dnf install gcc git mingw64-gcc unzip xz zip -y
     - export CHOOSENIM_NO_ANALYTICS=1
     - export CHOOSENIM_CHOOSE_VERSION="stable"
     - curl https://nim-lang.org/choosenim/init.sh -sSf > init.sh
@@ -14,19 +14,30 @@ build:linux:
   script:
     - export PATH="$HOME/.nimble/bin:$PATH"
     - mkdir -p dist/
+
+    # Linux
     - nimble build -d:release --passc:"-flto" -y
     - strip clr
     - tar cfJ dist/clr-linux-x86_64.tar.xz clr
+
+    # Windows
+    # pcre64.dll must be distributed with the Windows executable
+    - curl -O https://nim-lang.org/download/dlls.zip
+    - unzip dlls.zip
+    - nimble build -d:release --passc:"-flto" -d:crosswin
+    - strip clr pcre64.dll
+    - mv clr clr.exe
+    - zip -r9 dist/clr-windows-x86_64.zip clr.exe pcre64.dll
   artifacts:
     expire_in: 30 days
     paths:
       - dist/
 
-deploy:linux:
+deploy:
   stage: deploy
   image: fedora:28
   dependencies:
-    - build:linux
+    - build
   only:
     - tags
   before_script:
@@ -35,12 +46,18 @@ deploy:linux:
   script:
     - export PATH="$HOME/go/bin:$PATH"
     - gothub release
-      --user Calinou
-      --repo clr
-      --tag "$CI_COMMIT_TAG"
+          --user Calinou
+          --repo clr
+          --tag "$CI_COMMIT_TAG"
     - gothub upload
-      --user Calinou
-      --repo clr
-      --tag "$CI_COMMIT_TAG"
-      --name "clr-$CI_COMMIT_TAG-linux-x86_64.tar.xz"
-      --file "dist/clr-linux-x86_64.tar.xz"
+          --user Calinou
+          --repo clr
+          --tag "$CI_COMMIT_TAG"
+          --name "clr-$CI_COMMIT_TAG-linux-x86_64.tar.xz"
+          --file "dist/clr-linux-x86_64.tar.xz"
+    - gothub upload
+          --user Calinou
+          --repo clr
+          --tag "$CI_COMMIT_TAG"
+          --name "clr-$CI_COMMIT_TAG-windows-x86_64.zip"
+          --file "dist/clr-windows-x86_64.zip"
