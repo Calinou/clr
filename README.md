@@ -16,12 +16,10 @@
 
 After installing [Nim](https://nim-lang.org/)
 and [Nimble](https://github.com/nim-lang/nimble) (bundled with Nim),
-enter the following commands in a terminal:
+enter the following command in a terminal:
 
 ```
-git clone https://github.com/Calinou/clr.git
-cd clr
-nimble install
+nimble install https://github.com/Calinou/clr.git
 ```
 
 ## Usage
