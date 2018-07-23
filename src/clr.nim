@@ -46,6 +46,7 @@ Notes:
     - rgb(R, G, B)
     - hsl(H, S%, L%)
     - hsv(H, S%, L%)
+    - HTML color names
 
   <amount> must be a value between 0 and 1.
   The value will affect the color in an absolute manner.
