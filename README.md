@@ -12,6 +12,12 @@
 
 ## Installation
 
+### Binary releases
+
+Download a binary for your operating system on the
+[Releases page](https://github.com/Calinou/clr/releases).
+Make sure to place it in a location present in your `PATH` environment variable.
+
 ### Building from source
 
 After installing [Nim](https://nim-lang.org/)
@@ -19,8 +25,10 @@ and [Nimble](https://github.com/nim-lang/nimble) (bundled with Nim),
 enter the following command in a terminal:
 
 ```
-nimble install https://github.com/Calinou/clr.git
+nimble install clr
 ```
+
+Using this installation method, clr will be immediately available in your `PATH`.
 
 ## Usage
 
