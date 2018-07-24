@@ -1,7 +1,12 @@
 # Cross-compiling for Windows can be done by passing `-d:crosswin` to Nim
 when defined(crosswin):
   switch("cc", "gcc")
-  let mingwExe = "x86_64-w64-mingw32-gcc"
+  const arch =
+    if buildCPU == "amd64":
+      "x86_64"
+    else:
+      "i686"
+  const mingwExe = arch & "-w64-mingw32-gcc"
   switch("gcc.linkerexe", mingwExe)
   switch("gcc.exe", mingwExe)
   switch("gcc.path", "/usr/bin/")
