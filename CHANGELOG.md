@@ -7,8 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.1] - 2018-07-24
+
+### Added
+
+- 32-bit Windows binaries are now available.
+
+### Changed
+
+- Improved packaging of releases.
+
 ## 0.1.0 - 2018-07-22
 
 - Initial versioned release.
 
-[Unreleased]: https://github.com/Calinou/clr/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Calinou/clr/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Calinou/clr/compare/v0.1.0...v0.1.1
