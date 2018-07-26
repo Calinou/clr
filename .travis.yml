@@ -1,0 +1,33 @@
+language: c
+os: osx
+osx_image: xcode9.4
+
+before_script:
+  - export CHOOSENIM_NO_ANALYTICS=1
+  - export CHOOSENIM_CHOOSE_VERSION="stable"
+  - curl https://nim-lang.org/choosenim/init.sh -sSf > init.sh
+  - sh init.sh -y
+
+script:
+  - export PATH="$HOME/.nimble/bin:$PATH"
+  - mkdir -p dist/
+
+  - nimble build -d:release --passc:"-flto" -y
+  - strip clr
+  - mkdir -p clr-macos-x86_64/
+  - mv clr clr-macos-x86_64/
+  - cp README.md LICENSE.md clr-macos-x86_64/
+  - tar cfJ dist/clr-macos-x86_64.tar.xz clr-macos-x86_64/
+
+after_success:
+  - if [[ "$TRAVIS_TAG" != "" ]]; then
+      export PATH="$HOME/go/bin:$PATH";
+      gothub release
+          --tag "$TRAVIS_TAG" || true;
+      gothub upload
+          --tag "$TRAVIS_TAG"
+          --name "clr-$TRAVIS_TAG-macos-x86_64.tar.xz"
+          --file "dist/clr-macos-x86_64.tar.xz";
+    else
+      echo "Not a tag, skipping deployment.";
+    fi;
