@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.2] - 2018-07-26
+
+### Added
+
+- macOS binaries are now available.
+
 ## [0.1.1] - 2018-07-24
 
 ### Added
@@ -21,5 +27,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial versioned release.
 
-[Unreleased]: https://github.com/Calinou/clr/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Calinou/clr/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Calinou/clr/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Calinou/clr/compare/v0.1.0...v0.1.1

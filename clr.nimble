@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.1"
+version       = "0.1.2"
 author        = "Hugo Locurcio"
 description   = "Get information about colors and convert them in the command line"
 license       = "MIT"

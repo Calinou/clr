@@ -21,6 +21,7 @@ script:
 
 after_success:
   - if [[ "$TRAVIS_TAG" != "" ]]; then
+      go get github.com/itchio/gothub;
       export PATH="$HOME/go/bin:$PATH";
       gothub release
           --tag "$TRAVIS_TAG" || true;
