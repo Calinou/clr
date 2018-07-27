@@ -76,22 +76,22 @@ proc parseColor(color: string): chroma.Color =
     var matches: array[3, string]
 
     if match(color, hslRegex, matches):
-      let colorHSL = ColorHSL(
+      let colorHsl = ColorHSL(
         h: parseFloat(matches[0]),
         s: parseFloat(matches[1]),
         l: parseFloat(matches[2]),
       )
 
-      return color(colorHSL)
+      return color(colorHsl)
 
     elif match(color, hsvRegex, matches):
-      let colorHSV = ColorHSV(
+      let colorHsv = ColorHSV(
         h: parseFloat(matches[0]),
         s: parseFloat(matches[1]),
         v: parseFloat(matches[2]),
       )
 
-      return color(colorHSV)
+      return color(colorHsv)
 
   except:
     styledEcho(styleBright, fgRed, "Error: Could not parse color.")
