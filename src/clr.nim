@@ -94,7 +94,8 @@ proc parseColor(color: string): chroma.Color =
       return color(colorHSV)
 
   except:
-    echo "Could not parse color."
+    styledEcho(styleBright, fgRed, "Error: Could not parse color.")
+    quit(1)
 
 proc displayColor(color: chroma.Color) =
   ## Displays a color and some information in the terminal.
