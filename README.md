@@ -24,7 +24,7 @@ After installing [Nim](https://nim-lang.org/)
 and [Nimble](https://github.com/nim-lang/nimble) (bundled with Nim),
 enter the following command in a terminal:
 
-```
+```text
 nimble install clr
 ```
 
@@ -34,7 +34,7 @@ Using this installation method, clr will be immediately available in your `PATH`
 
 See the command-line help:
 
-```
+```text
 clr
 Get information about colors and convert them in the command line.
 
