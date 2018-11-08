@@ -29,9 +29,9 @@ build:
 
     # Windows 64-bit
     - nimble build -d:release --passc:"-flto" -d:crosswin
-    - strip clr pcre64.dll
+    - strip clr.exe pcre64.dll
     - mkdir -p clr-windows-x86_64/
-    - mv clr pcre64.dll clr-windows-x86_64/
+    - mv clr.exe pcre64.dll clr-windows-x86_64/
     - cp README.md LICENSE.md clr-windows-x86_64/
     - zip -r9 dist/clr-windows-x86_64.zip clr-windows-x86_64/
 
@@ -41,9 +41,9 @@ build:
     - rm /usr/bin/x86_64-w64-mingw32-gcc
     - ln -s /usr/bin/i686-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc
     - nimble build -d:release --passc:"-flto" -d:crosswin --cpu:i386
-    - strip clr pcre32.dll
+    - strip clr.exe pcre32.dll
     - mkdir -p clr-windows-x86/
-    - mv clr pcre32.dll clr-windows-x86/
+    - mv clr.exe pcre32.dll clr-windows-x86/
     - cp README.md LICENSE.md clr-windows-x86/
     - zip -r9 dist/clr-windows-x86.zip clr-windows-x86/
   artifacts:
