@@ -1,5 +1,6 @@
 language: c
 os: osx
+osx_image: xcode10.1
 
 before_script:
   - export CHOOSENIM_NO_ANALYTICS=1
