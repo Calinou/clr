@@ -156,7 +156,7 @@ proc displayColor(color: chroma.Color) =
 
   echo ""
 
-let args = docopt(doc, version = "0.1.2")
+let args = docopt(doc, version = "0.1.3")
 # The COLORTERM environment variable must be set to "truecolor" or "24bit"
 # for true color terminal output to work
 enableTrueColors()
