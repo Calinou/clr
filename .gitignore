@@ -1,6 +1,6 @@
 # Compiled executables
 clr
-clr.exe
+clr*.exe
 
 # Build cache
 nimcache/

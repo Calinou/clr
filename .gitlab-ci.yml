@@ -28,7 +28,7 @@ build:
     - unzip dlls.zip
 
     # Windows 64-bit
-    - nimble build -d:release --passc:"-flto" -d:crosswin
+    - nimble build -d:release --passc:"-flto" -d:mingw
     - strip clr.exe pcre64.dll
     - mkdir -p clr-windows-x86_64/
     - mv clr.exe pcre64.dll clr-windows-x86_64/
@@ -40,7 +40,7 @@ build:
     # the right one for some reason
     - rm /usr/bin/x86_64-w64-mingw32-gcc
     - ln -s /usr/bin/i686-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc
-    - nimble build -d:release --passc:"-flto" -d:crosswin --cpu:i386
+    - nimble build -d:release --passc:"-flto" -d:mingw --cpu:i386
     - strip clr.exe pcre32.dll
     - mkdir -p clr-windows-x86/
     - mv clr.exe pcre32.dll clr-windows-x86/
