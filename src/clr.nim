@@ -120,41 +120,41 @@ proc displayColor(color: chroma.Color) =
 
   # Display output
 
-  echo ""
+  echo("")
 
   for str in pairs(colorStr):
     let notation = toUpperAscii(str.val[0])
     styledEcho(styleBright, fgWhite, &"  {notation}   ", resetStyle, str.val[1])
 
-  echo ""
+  echo("")
 
   let squareSize = 4
 
   # Draw preview rectangles, surrounded by 1 row of margin
   for row in 0..squareSize:
-    stdout.write " ".repeat(3)
+    stdout.write(" ".repeat(3))
 
     if row != 0 and row != squareSize:
       setBackgroundColor(colorTerm)
 
-    stdout.write " ".repeat(int(float(squareSize)*1.9))
+    stdout.write(" ".repeat(int(float(squareSize)*1.9)))
 
     resetAttributes()
-    stdout.write " ".repeat(3)
+    stdout.write(" ".repeat(3))
     setBackgroundColor(bgWhite)
-    stdout.write " ".repeat(3)
+    stdout.write(" ".repeat(3))
 
     if row != 0 and row != squareSize:
       setBackgroundColor(colorTerm)
 
-    stdout.write " ".repeat(int(float(squareSize)*1.9))
+    stdout.write(" ".repeat(int(float(squareSize)*1.9)))
 
     setBackgroundColor(bgWhite)
-    stdout.write " ".repeat(3)
+    stdout.write(" ".repeat(3))
     resetAttributes()
-    echo ""
+    echo("")
 
-  echo ""
+  echo("")
 
 let args = docopt(doc, version = "0.1.3")
 # The COLORTERM environment variable must be set to "truecolor" or "24bit"
