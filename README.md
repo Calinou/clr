@@ -78,7 +78,7 @@ export COLORTERM="truecolor"
 
 ## License
 
-Copyright © 2018 Hugo Locurcio and contributors
+Copyright © 2018-2019 Hugo Locurcio and contributors
 
 Unless otherwise specified, files in this repository are licensed under
 the MIT license; see [LICENSE.md](LICENSE.md) for more information.
