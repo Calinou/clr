@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.0] - 2019-07-08
+
 ### Changed
 
 - Reimplemented command-line argument parsing using
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Command syntax is now `clr <color>` with optional parameters (see `clr --help`).
   - Multiple options can now be chained, e.g.
     `clr blue --lighten 0.2 --desaturate 0.4`.
+- Nim 0.19.2 or later is now required to build `clr` from source.
 
 ## [0.1.3] - 2019-01-08
 
@@ -41,7 +44,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial versioned release.
 
-[Unreleased]: https://github.com/Calinou/clr/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/Calinou/clr/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Calinou/clr/compare/v0.1.3...v1.0.0
 [0.1.3]: https://github.com/Calinou/clr/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/Calinou/clr/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Calinou/clr/compare/v0.1.0...v0.1.1
