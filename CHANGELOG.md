@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Reimplemented command-line argument parsing using
+  [cligen](https://github.com/c-blake/cligen).
+  - Command syntax is now `clr <color>` with optional parameters (see `clr --help`).
+  - Multiple options can now be chained, e.g.
+    `clr blue --lighten 0.2 --desaturate 0.4`.
+
 ## [0.1.3] - 2019-01-08
 
 ### Fixed

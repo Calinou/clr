@@ -20,39 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-let doc = """
-clr
-Get information about colors and convert them in the command line.
-
-Usage:
-  clr info <color>
-  clr invert <color>
-  clr lighten <color> <amount>
-  clr darken <color> <amount>
-  clr saturate <color> <amount>
-  clr desaturate <color> <amount>
-  clr spin <color> <degrees>
-  clr (-h | --help)
-  clr (-V | --version)
-
-Options:
-  -h --help        Show this screen.
-  -V --version     Show version.
-
-Notes:
-  <color> accepts the following color formats:
-    - #RGB
-    - #RRGGBB
-    - rgb(R, G, B)
-    - hsl(H, S%, L%)
-    - hsv(H, S%, L%)
-    - HTML color names
-
-  <amount> must be a value between 0 and 1.
-  The value will affect the color in an absolute manner.
-"""
-
-import docopt
+import cligen
 import chroma
 import colors
 import re
@@ -128,7 +96,7 @@ proc displayColor(color: chroma.Color) =
 
   echo("")
 
-  let squareSize = 4
+  const squareSize = 4
 
   # Draw preview rectangles, surrounded by 1 row of margin
   for row in 0..squareSize:
@@ -156,54 +124,59 @@ proc displayColor(color: chroma.Color) =
 
   echo("")
 
-let args = docopt(doc, version = "0.1.3")
+proc main(
+  invert: bool = false,
+  lighten: float = 0.0,
+  darken: float = 0.0,
+  saturate: float = 0.0,
+  desaturate: float = 0.0,
+  spin: float = 0.0,
+  color: seq[string]
+) =
+  ## Displays information about a color. The color can be modified
+  ## before being displayed.
+  ##
+  ## The color must be written in one of the following formats:
+  ##   - #RGB
+  ##   - #RRGGBB
+  ##   - rgb(R, G, B)
+  ##   - hsl(H, S%, L%)
+  ##   - hsv(H, S%, L%)
+  ##   - HTML color names
+  ##
+  ## On shells such as Bash and zsh, you will have to write colors
+  ## between quotes to avoid parse errors.
+  if len(color) != 1:
+    let word = if len(color) >= 3: "many" else: "few"
+    styledEcho(styleBright, fgRed,
+      &"""Error: Too {word} arguments specified ({len(color)} specified, 1 expected).
+       Use --help to display a a list of commands."""
+    )
+    quit(1)
+
+  var finalColor = parseColor(color[0]).lighten(lighten).darken(darken).saturate(saturate).desaturate(desaturate).spin(spin)
+
+  if invert:
+    finalColor = chroma.color(
+      1.0 - finalColor.r,
+      1.0 - finalColor.g,
+      1.0 - finalColor.b
+    )
+
+  displayColor(finalColor)
+
 # The COLORTERM environment variable must be set to "truecolor" or "24bit"
 # for true color terminal output to work
 enableTrueColors()
 
-# Handle all commands that display a color
-if
-  args["info"] or
-  args["invert"] or
-  args["lighten"] or
-  args["darken"] or
-  args["saturate"] or
-  args["desaturate"] or
-  args["spin"]:
-
-  let color = parseColor($args["<color>"])
-
-  if args["info"]:
-    displayColor(color)
-
-  if args["invert"]:
-    displayColor(
-      chroma.color(
-        1.0 - color.r,
-        1.0 - color.g,
-        1.0 - color.b,
-      )
-    )
-
-  if args["lighten"]:
-    let lighten = parseFloat($args["<amount>"])
-    displayColor(lighten(color, lighten))
-
-  if args["darken"]:
-    let darken = parseFloat($args["<amount>"])
-    displayColor(darken(color, darken))
-
-  if args["saturate"]:
-    let saturation = parseFloat($args["<amount>"])
-    displayColor(saturate(color, saturation))
-
-  if args["desaturate"]:
-    let desaturation = parseFloat($args["<amount>"])
-    displayColor(desaturate(color, desaturation))
-
-  if args["spin"]:
-    let spin = parseFloat($args["<degrees>"])
-    displayColor(spin(color, spin))
+dispatch(main, help={
+  "invert": "Invert the color",
+  "lighten": "Lighten the color (0.0 = unchanged, 1.0 = white)",
+  "darken": "Darken the color (0.0 = unchanged, 1.0 = black)",
+  "saturate": "Saturate the color (0.0 = unchanged, 1.0 = double saturation)",
+  "desaturate": "Desaturate the color (0.0 = unchanged, 1.0 = grayscale)",
+  "spin": "Rotate the color's hue (0.0 = unchanged, 360.0 = full circle)",
+})
 
 # Always reset color codes when exiting
 system.addQuitProc(resetAttributes)
