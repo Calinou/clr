@@ -2,6 +2,11 @@
 
 **Get information about colors and convert them in the command line.**
 
+___
+A more powerful tool for doing this has been released.
+You may want to look at [Pastel](https://github.com/sharkdp/pastel) instead.
+___
+
 ## Use cases
 
 - As HSL colors are easier to reason about by humans, you want to use an
